@@ -128,4 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 selenium_open_cart/bin
-
+selenium_open_cart/venv/
+allure-report/
+allure-results/
+selenium_open_cart/logs/
+.DS_Store
+data_users/__init__.py
