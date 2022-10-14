@@ -1,10 +1,13 @@
-from page_objects.AdminPage import AdminPage
-from page_objects.AdminPage import AddProduct
-from page_objects.AdminPage import DeleteProduct
-from page_objects.StartPage import StartPage
-from page_objects.RegisterPage import PersonalDetails
+from selenium_open_cart.page_objects.AdminPage import AdminPage
+from selenium_open_cart.page_objects.AdminPage import AddProduct
+from selenium_open_cart.page_objects.AdminPage import DeleteProduct
+from selenium_open_cart.page_objects.StartPage import StartPage
+from selenium_open_cart.page_objects.RegisterPage import PersonalDetails
+import allure
+from allure_commons.types import Severity
 
 
+@allure.feature('Authorization and add product')
 def test_login_page_check_elements(browser):
     browser.get(browser.url + "admin")
     AdminPage(browser).insert_login()
@@ -21,6 +24,7 @@ def test_login_page_check_elements(browser):
     AddProduct(browser).click_to_safe_product()
 
 
+@allure.story('Delete product')
 def test_delete_product(browser):
     browser.get(browser.url + "admin")
     AdminPage(browser).insert_login()
@@ -32,6 +36,8 @@ def test_delete_product(browser):
     DeleteProduct(browser).alert_accept()
 
 
+@allure.severity(severity_level=Severity.BLOCKER)
+@allure.story('Add new user')
 def test_registration_user(browser):
     browser.get(browser.url)
     StartPage(browser).go_to_register_page()
@@ -46,6 +52,7 @@ def test_registration_user(browser):
     PersonalDetails(browser).click_to_continue()
 
 
+@allure.story('Switching currencies')
 def test_switching_currencies(browser):
     browser.get(browser.url)
     StartPage(browser).choose_currency_euro()

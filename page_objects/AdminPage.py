@@ -1,8 +1,10 @@
 from selenium.webdriver.common.by import By
 from selenium_open_cart.page_objects.BasePage import BasePage
-from selenium_open_cart.test_data.data import get_login
-from selenium_open_cart.test_data.data import get_pass
+from selenium_open_cart.data_users.data import get_login
+from selenium_open_cart.data_users.data import get_pass
 import time
+import allure
+from selenium.common.exceptions import NoSuchElementException
 
 
 class AdminPage(BasePage):
@@ -12,21 +14,37 @@ class AdminPage(BasePage):
     CHOICE_PARENT_CATEGORY = (By.XPATH, "//*[text()=' Catalog']")
     CHOICE_CHILD_CATEGORY = (By.XPATH, "//*[@id='collapse1']/li[2]/a")
 
+    @allure.step("Looked for Username fild")
     def insert_login(self):
         self.driver.find_element(*self.USERNAME_FILD).clear()
         self.driver.find_element(*self.USERNAME_FILD).send_keys(*get_login())
 
+    @allure.step("Looked for Password fild")
     def insert_password(self):
         self.driver.find_element(*self.PASSWORD_FILD).clear()
         self.driver.find_element(*self.PASSWORD_FILD).send_keys(*get_pass())
 
+    @allure.step("Did click on Button")
     def click_to_button_login(self):
-        self.driver.find_element(*self.BUTTON).click()
-        time.sleep(0.5)
+        try:
+            self.driver.find_element(*self.BUTTON).click()
+            time.sleep(0.5)
+        except NoSuchElementException as e:
+            allure.attach(body=self.driver.get_screenshot_as_png(),
+                          name="screenshot_image",
+                          attachment_type=allure.attachment_type.PNG)
+            raise AssertionError(e.msg)
 
+    @allure.step("Choice category")
     def go_to_category(self):
-        self.driver.find_element(*self.CHOICE_PARENT_CATEGORY).click()
-        time.sleep(0.5)
+        try:
+            self.driver.find_element(*self.CHOICE_PARENT_CATEGORY).click()
+            time.sleep(0.5)
+        except NoSuchElementException as e:
+            allure.attach(body=self.driver.get_screenshot_as_png(),
+                          name="screenshot_image",
+                          attachment_type=allure.attachment_type.PNG)
+            raise AssertionError(e.msg)
         self.driver.find_element(*self.CHOICE_CHILD_CATEGORY).click()
 
 
@@ -40,46 +58,71 @@ class AddProduct(BasePage):
     ADD_MODEL_PRODUCT = (By.XPATH, "//*[@id='input-model']")
     CLICK_TO_SAFE_PRODUCT = (By.XPATH, "//*[@id='content']/div[1]/div/div/button/i")
 
+    @allure.step("Do click to icon")
     def go_to_create_product(self):
         self.driver.find_element(*self.CLICK_TO_ICON).click()
 
+    @allure.step("Added title product")
     def add_title_product(self):
         self.driver.find_element(*self.ADD_TITLE).send_keys("Title product random")
 
+    @allure.step("Added description product")
     def add_description_product(self):
         self.driver.find_element(*self.ADD_DESCRIPTION) \
             .send_keys("Text of Description")
 
+    @allure.step("Added tag title")
     def add_tag_title(self):
         self.driver.find_element(*self.ADD_TAG_TITLE) \
             .send_keys("Title product tag")
 
+    @allure.step("Added tag description")
     def add_tag_description(self):
         self.driver.find_element(*self.ADD_TAG_DESCRIPTION) \
             .send_keys("Title product description")
 
+    @allure.step("Go to another tab")
     def go_to_tab_data(self):
         self.driver.find_element(*self.GO_TO_TAB_DATA).click()
 
+    @allure.step("Added model product")
     def add_model_product(self):
         self.driver.find_element(*self.ADD_MODEL_PRODUCT).send_keys("model1")
 
+    @allure.step("Click to safe product")
     def click_to_safe_product(self):
-        self.driver.find_element(*self.CLICK_TO_SAFE_PRODUCT).click()
+        try:
+            self.driver.find_element(*self.CLICK_TO_SAFE_PRODUCT).click()
+        except NoSuchElementException as e:
+            allure.attach(body=self.driver.get_screenshot_as_png(),
+                          name="screenshot_image",
+                          attachment_type=allure.attachment_type.PNG)
+            raise AssertionError(e.msg)
 
 
 class DeleteProduct(BasePage):
     SELECT_PRODUCT = (By.XPATH, "//*[text()='Title product random']//..//input")
     BUTTON_DELETE_PRODUCT = (By.XPATH, "//button[@class='btn btn-danger']")
 
+    @allure.link('https://webformyself.com/kak-udalit-vse-tovary-v-opencart/',
+                 name='How is delete product from OpenCart')
+    @allure.step("Select product")
     def select_product(self):
         self.driver.find_element(*self.SELECT_PRODUCT).click()
 
+    @allure.step("Click on button delete")
     def click_on_button_delete(self):
         self.driver.find_element(*self.BUTTON_DELETE_PRODUCT).click()
 
+    @allure.step("Switch to alert and accepted")
     def alert_accept(self):
-        alert = self.driver.switch_to.alert
-        time.sleep(1)
-        alert.accept()
-        time.sleep(1)
+        try:
+            alert = self.driver.switch_to.alert
+            time.sleep(1)
+            alert.accept()
+            time.sleep(1)
+        except NoSuchElementException as e:
+            allure.attach(body=self.driver.get_screenshot_as_png(),
+                          name="screenshot_image",
+                          attachment_type=allure.attachment_type.PNG)
+            raise AssertionError(e.msg)
