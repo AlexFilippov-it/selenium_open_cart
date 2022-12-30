@@ -3,8 +3,32 @@ from selenium_open_cart.page_objects.AdminPage import AddProduct
 from selenium_open_cart.page_objects.AdminPage import DeleteProduct
 from selenium_open_cart.page_objects.StartPage import StartPage
 from selenium_open_cart.page_objects.RegisterPage import PersonalDetails
+from selenium_open_cart.page_objects.CompareList import CompareListPages
+from selenium_open_cart.page_objects.SearchPages import SearchPages
 import allure
 from allure_commons.types import Severity
+
+
+@allure.story('Check search field')
+def test_check_search_fild(browser):
+    browser.get(browser.url)
+    SearchPages(browser).write_apple_and_search()
+    SearchPages(browser).search_in_description()
+    SearchPages(browser).check_search_page()
+    SearchPages(browser).add_to_compare()
+    SearchPages(browser).remove_first_product()
+    SearchPages(browser).add_to_cart_second_product()
+
+
+@allure.story('Check products in Wish List')
+def test_check_products_in_wish_list(browser):
+    browser.get(browser.url)
+    CompareListPages(browser).go_to_catalog_page()
+    CompareListPages(browser).choose_two_products()
+    CompareListPages(browser).click_to_wish_list()
+    CompareListPages(browser).login_in_user_panel()
+    CompareListPages(browser).delete_first_product()
+    CompareListPages(browser).delete_second_product()
 
 
 @allure.feature('Authorization and add product')
